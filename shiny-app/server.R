@@ -91,13 +91,21 @@ server <- function(input, output, session) {
       head(10) %>% 
       group_by(team) %>% 
       summarise(goals = sum(score)) %>% 
-      ungroup() %>% 
-      ggplot(aes(x = team, y = goals))+
-      geom_col()+
+      ungroup() %>%
+      arrange(desc(goals)) %>% 
+      ggplot(aes(y = team, x = goals, fill = team))+
+      geom_col(width = 0.8)+
+      scale_fill_manual(values = c('darkgrey', 'lightgrey'))+
+      geom_text(aes(label = paste0(goals, ' Goals')), hjust = -0.3, size = 6, family = 'Roboto')+
+      scale_x_continuous(expand = expansion(c(0, 0.25))) +
       theme_minimal()+
-      labs(x = "Team",
-           y = "Goals",
-           title = "Goals in the Last 5 Games")
+      labs(y = "Team",
+           x = "Goals",
+           title = "Goals in the Last 5 Games")+
+      theme(
+        legend.position = 'none',
+        text = element_text(size = 14, family = 'Roboto')
+      )
   })
   
 }
